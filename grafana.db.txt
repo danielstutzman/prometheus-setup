@@ -1,0 +1,845 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE `migration_log` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `migration_id` TEXT NOT NULL
+, `sql` TEXT NOT NULL
+, `success` INTEGER NOT NULL
+, `error` TEXT NOT NULL
+, `timestamp` DATETIME NOT NULL
+);
+INSERT INTO "migration_log" VALUES(1,'create migration_log table','CREATE TABLE IF NOT EXISTS `migration_log` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `migration_id` TEXT NOT NULL
+, `sql` TEXT NOT NULL
+, `success` INTEGER NOT NULL
+, `error` TEXT NOT NULL
+, `timestamp` DATETIME NOT NULL
+);',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(2,'create user table','CREATE TABLE IF NOT EXISTS `user` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `version` INTEGER NOT NULL
+, `login` TEXT NOT NULL
+, `email` TEXT NOT NULL
+, `name` TEXT NULL
+, `password` TEXT NULL
+, `salt` TEXT NULL
+, `rands` TEXT NULL
+, `company` TEXT NULL
+, `account_id` INTEGER NOT NULL
+, `is_admin` INTEGER NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+);',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(3,'add unique index user.login','CREATE UNIQUE INDEX `UQE_user_login` ON `user` (`login`);',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(4,'add unique index user.email','CREATE UNIQUE INDEX `UQE_user_email` ON `user` (`email`);',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(5,'drop index UQE_user_login - v1','DROP INDEX `UQE_user_login`',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(6,'drop index UQE_user_email - v1','DROP INDEX `UQE_user_email`',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(7,'Rename table user to user_v1 - v1','ALTER TABLE `user` RENAME TO `user_v1`',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(8,'create user table v2','CREATE TABLE IF NOT EXISTS `user` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `version` INTEGER NOT NULL
+, `login` TEXT NOT NULL
+, `email` TEXT NOT NULL
+, `name` TEXT NULL
+, `password` TEXT NULL
+, `salt` TEXT NULL
+, `rands` TEXT NULL
+, `company` TEXT NULL
+, `org_id` INTEGER NOT NULL
+, `is_admin` INTEGER NOT NULL
+, `email_verified` INTEGER NULL
+, `theme` TEXT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+);',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(9,'create index UQE_user_login - v2','CREATE UNIQUE INDEX `UQE_user_login` ON `user` (`login`);',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(10,'create index UQE_user_email - v2','CREATE UNIQUE INDEX `UQE_user_email` ON `user` (`email`);',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(11,'copy data_source v1 to v2','INSERT INTO `user` (`updated`
+, `id`
+, `name`
+, `salt`
+, `is_admin`
+, `created`
+, `company`
+, `org_id`
+, `version`
+, `login`
+, `email`
+, `password`
+, `rands`) SELECT `updated`
+, `id`
+, `name`
+, `salt`
+, `is_admin`
+, `created`
+, `company`
+, `account_id`
+, `version`
+, `login`
+, `email`
+, `password`
+, `rands` FROM `user_v1`',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(12,'Drop old table user_v1','DROP TABLE IF EXISTS `user_v1`',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(13,'create temp user table v1-7','CREATE TABLE IF NOT EXISTS `temp_user` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `version` INTEGER NOT NULL
+, `email` TEXT NOT NULL
+, `name` TEXT NULL
+, `role` TEXT NULL
+, `code` TEXT NOT NULL
+, `status` TEXT NOT NULL
+, `invited_by_user_id` INTEGER NULL
+, `email_sent` INTEGER NOT NULL
+, `email_sent_on` DATETIME NULL
+, `remote_addr` TEXT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+);',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(14,'create index IDX_temp_user_email - v1-7','CREATE INDEX `IDX_temp_user_email` ON `temp_user` (`email`);',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(15,'create index IDX_temp_user_org_id - v1-7','CREATE INDEX `IDX_temp_user_org_id` ON `temp_user` (`org_id`);',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(16,'create index IDX_temp_user_code - v1-7','CREATE INDEX `IDX_temp_user_code` ON `temp_user` (`code`);',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(17,'create index IDX_temp_user_status - v1-7','CREATE INDEX `IDX_temp_user_status` ON `temp_user` (`status`);',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(18,'create star table','CREATE TABLE IF NOT EXISTS `star` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `user_id` INTEGER NOT NULL
+, `dashboard_id` INTEGER NOT NULL
+);',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(19,'add unique index star.user_id_dashboard_id','CREATE UNIQUE INDEX `UQE_star_user_id_dashboard_id` ON `star` (`user_id`,`dashboard_id`);',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(20,'create org table v1','CREATE TABLE IF NOT EXISTS `org` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `version` INTEGER NOT NULL
+, `name` TEXT NOT NULL
+, `address1` TEXT NULL
+, `address2` TEXT NULL
+, `city` TEXT NULL
+, `state` TEXT NULL
+, `zip_code` TEXT NULL
+, `country` TEXT NULL
+, `billing_email` TEXT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+);',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(21,'create index UQE_org_name - v1','CREATE UNIQUE INDEX `UQE_org_name` ON `org` (`name`);',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(22,'create org_user table v1','CREATE TABLE IF NOT EXISTS `org_user` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `user_id` INTEGER NOT NULL
+, `role` TEXT NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+);',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(23,'create index IDX_org_user_org_id - v1','CREATE INDEX `IDX_org_user_org_id` ON `org_user` (`org_id`);',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(24,'create index UQE_org_user_org_id_user_id - v1','CREATE UNIQUE INDEX `UQE_org_user_org_id_user_id` ON `org_user` (`org_id`,`user_id`);',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(25,'copy data account to org','INSERT INTO `org` (`id`
+, `version`
+, `name`
+, `created`
+, `updated`) SELECT `id`
+, `version`
+, `name`
+, `created`
+, `updated` FROM `account`',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(26,'copy data account_user to org_user','INSERT INTO `org_user` (`id`
+, `org_id`
+, `user_id`
+, `role`
+, `created`
+, `updated`) SELECT `id`
+, `account_id`
+, `user_id`
+, `role`
+, `created`
+, `updated` FROM `account_user`',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(27,'Drop old table account','DROP TABLE IF EXISTS `account`',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(28,'Drop old table account_user','DROP TABLE IF EXISTS `account_user`',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(29,'create dashboard table','CREATE TABLE IF NOT EXISTS `dashboard` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `version` INTEGER NOT NULL
+, `slug` TEXT NOT NULL
+, `title` TEXT NOT NULL
+, `data` TEXT NOT NULL
+, `account_id` INTEGER NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+);',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(30,'add index dashboard.account_id','CREATE INDEX `IDX_dashboard_account_id` ON `dashboard` (`account_id`);',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(31,'add unique index dashboard_account_id_slug','CREATE UNIQUE INDEX `UQE_dashboard_account_id_slug` ON `dashboard` (`account_id`,`slug`);',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(32,'create dashboard_tag table','CREATE TABLE IF NOT EXISTS `dashboard_tag` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `dashboard_id` INTEGER NOT NULL
+, `term` TEXT NOT NULL
+);',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(33,'add unique index dashboard_tag.dasboard_id_term','CREATE UNIQUE INDEX `UQE_dashboard_tag_dashboard_id_term` ON `dashboard_tag` (`dashboard_id`,`term`);',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(34,'drop index UQE_dashboard_tag_dashboard_id_term - v1','DROP INDEX `UQE_dashboard_tag_dashboard_id_term`',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(35,'Rename table dashboard to dashboard_v1 - v1','ALTER TABLE `dashboard` RENAME TO `dashboard_v1`',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(36,'create dashboard v2','CREATE TABLE IF NOT EXISTS `dashboard` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `version` INTEGER NOT NULL
+, `slug` TEXT NOT NULL
+, `title` TEXT NOT NULL
+, `data` TEXT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+);',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(37,'create index IDX_dashboard_org_id - v2','CREATE INDEX `IDX_dashboard_org_id` ON `dashboard` (`org_id`);',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(38,'create index UQE_dashboard_org_id_slug - v2','CREATE UNIQUE INDEX `UQE_dashboard_org_id_slug` ON `dashboard` (`org_id`,`slug`);',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(39,'copy dashboard v1 to v2','INSERT INTO `dashboard` (`updated`
+, `id`
+, `version`
+, `slug`
+, `title`
+, `data`
+, `org_id`
+, `created`) SELECT `updated`
+, `id`
+, `version`
+, `slug`
+, `title`
+, `data`
+, `account_id`
+, `created` FROM `dashboard_v1`',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(40,'drop table dashboard_v1','DROP TABLE IF EXISTS `dashboard_v1`',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(41,'alter dashboard.data to mediumtext v1','SELECT 0 WHERE 0;',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(42,'Add column updated_by in dashboard - v2','alter table `dashboard` ADD COLUMN `updated_by` INTEGER NULL ',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(43,'Add column created_by in dashboard - v2','alter table `dashboard` ADD COLUMN `created_by` INTEGER NULL ',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(44,'Add column gnetId in dashboard','alter table `dashboard` ADD COLUMN `gnet_id` INTEGER NULL ',1,'','2016-09-13 17:01:46');
+INSERT INTO "migration_log" VALUES(45,'Add index for gnetId in dashboard','CREATE INDEX `IDX_dashboard_gnet_id` ON `dashboard` (`gnet_id`);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(46,'Add column plugin_id in dashboard','alter table `dashboard` ADD COLUMN `plugin_id` TEXT NULL ',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(47,'Add index for plugin_id in dashboard','CREATE INDEX `IDX_dashboard_org_id_plugin_id` ON `dashboard` (`org_id`,`plugin_id`);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(48,'create data_source table','CREATE TABLE IF NOT EXISTS `data_source` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `account_id` INTEGER NOT NULL
+, `version` INTEGER NOT NULL
+, `type` TEXT NOT NULL
+, `name` TEXT NOT NULL
+, `access` TEXT NOT NULL
+, `url` TEXT NOT NULL
+, `password` TEXT NULL
+, `user` TEXT NULL
+, `database` TEXT NULL
+, `basic_auth` INTEGER NOT NULL
+, `basic_auth_user` TEXT NULL
+, `basic_auth_password` TEXT NULL
+, `is_default` INTEGER NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(49,'add index data_source.account_id','CREATE INDEX `IDX_data_source_account_id` ON `data_source` (`account_id`);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(50,'add unique index data_source.account_id_name','CREATE UNIQUE INDEX `UQE_data_source_account_id_name` ON `data_source` (`account_id`,`name`);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(51,'drop index IDX_data_source_account_id - v1','DROP INDEX `IDX_data_source_account_id`',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(52,'drop index UQE_data_source_account_id_name - v1','DROP INDEX `UQE_data_source_account_id_name`',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(53,'Rename table data_source to data_source_v1 - v1','ALTER TABLE `data_source` RENAME TO `data_source_v1`',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(54,'create data_source table v2','CREATE TABLE IF NOT EXISTS `data_source` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `version` INTEGER NOT NULL
+, `type` TEXT NOT NULL
+, `name` TEXT NOT NULL
+, `access` TEXT NOT NULL
+, `url` TEXT NOT NULL
+, `password` TEXT NULL
+, `user` TEXT NULL
+, `database` TEXT NULL
+, `basic_auth` INTEGER NOT NULL
+, `basic_auth_user` TEXT NULL
+, `basic_auth_password` TEXT NULL
+, `is_default` INTEGER NOT NULL
+, `json_data` TEXT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(55,'create index IDX_data_source_org_id - v2','CREATE INDEX `IDX_data_source_org_id` ON `data_source` (`org_id`);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(56,'create index UQE_data_source_org_id_name - v2','CREATE UNIQUE INDEX `UQE_data_source_org_id_name` ON `data_source` (`org_id`,`name`);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(57,'copy data_source v1 to v2','INSERT INTO `data_source` (`url`
+, `basic_auth_user`
+, `created`
+, `updated`
+, `id`
+, `name`
+, `password`
+, `basic_auth_password`
+, `user`
+, `org_id`
+, `version`
+, `type`
+, `access`
+, `database`
+, `basic_auth`
+, `is_default`) SELECT `url`
+, `basic_auth_user`
+, `created`
+, `updated`
+, `id`
+, `name`
+, `password`
+, `basic_auth_password`
+, `user`
+, `account_id`
+, `version`
+, `type`
+, `access`
+, `database`
+, `basic_auth`
+, `is_default` FROM `data_source_v1`',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(58,'Drop old table data_source_v1 #2','DROP TABLE IF EXISTS `data_source_v1`',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(59,'Add column with_credentials','alter table `data_source` ADD COLUMN `with_credentials` INTEGER NOT NULL DEFAULT 0 ',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(60,'create api_key table','CREATE TABLE IF NOT EXISTS `api_key` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `account_id` INTEGER NOT NULL
+, `name` TEXT NOT NULL
+, `key` TEXT NOT NULL
+, `role` TEXT NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(61,'add index api_key.account_id','CREATE INDEX `IDX_api_key_account_id` ON `api_key` (`account_id`);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(62,'add index api_key.key','CREATE UNIQUE INDEX `UQE_api_key_key` ON `api_key` (`key`);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(63,'add index api_key.account_id_name','CREATE UNIQUE INDEX `UQE_api_key_account_id_name` ON `api_key` (`account_id`,`name`);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(64,'drop index IDX_api_key_account_id - v1','DROP INDEX `IDX_api_key_account_id`',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(65,'drop index UQE_api_key_key - v1','DROP INDEX `UQE_api_key_key`',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(66,'drop index UQE_api_key_account_id_name - v1','DROP INDEX `UQE_api_key_account_id_name`',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(67,'Rename table api_key to api_key_v1 - v1','ALTER TABLE `api_key` RENAME TO `api_key_v1`',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(68,'create api_key table v2','CREATE TABLE IF NOT EXISTS `api_key` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `name` TEXT NOT NULL
+, `key` TEXT NOT NULL
+, `role` TEXT NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(69,'create index IDX_api_key_org_id - v2','CREATE INDEX `IDX_api_key_org_id` ON `api_key` (`org_id`);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(70,'create index UQE_api_key_key - v2','CREATE UNIQUE INDEX `UQE_api_key_key` ON `api_key` (`key`);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(71,'create index UQE_api_key_org_id_name - v2','CREATE UNIQUE INDEX `UQE_api_key_org_id_name` ON `api_key` (`org_id`,`name`);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(72,'copy api_key v1 to v2','INSERT INTO `api_key` (`org_id`
+, `name`
+, `key`
+, `role`
+, `created`
+, `updated`
+, `id`) SELECT `account_id`
+, `name`
+, `key`
+, `role`
+, `created`
+, `updated`
+, `id` FROM `api_key_v1`',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(73,'Drop old table api_key_v1','DROP TABLE IF EXISTS `api_key_v1`',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(74,'create dashboard_snapshot table v4','CREATE TABLE IF NOT EXISTS `dashboard_snapshot` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `name` TEXT NOT NULL
+, `key` TEXT NOT NULL
+, `dashboard` TEXT NOT NULL
+, `expires` DATETIME NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(75,'drop table dashboard_snapshot_v4 #1','DROP TABLE IF EXISTS `dashboard_snapshot`',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(76,'create dashboard_snapshot table v5 #2','CREATE TABLE IF NOT EXISTS `dashboard_snapshot` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `name` TEXT NOT NULL
+, `key` TEXT NOT NULL
+, `delete_key` TEXT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `user_id` INTEGER NOT NULL
+, `external` INTEGER NOT NULL
+, `external_url` TEXT NOT NULL
+, `dashboard` TEXT NOT NULL
+, `expires` DATETIME NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(77,'create index UQE_dashboard_snapshot_key - v5','CREATE UNIQUE INDEX `UQE_dashboard_snapshot_key` ON `dashboard_snapshot` (`key`);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(78,'create index UQE_dashboard_snapshot_delete_key - v5','CREATE UNIQUE INDEX `UQE_dashboard_snapshot_delete_key` ON `dashboard_snapshot` (`delete_key`);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(79,'create index IDX_dashboard_snapshot_user_id - v5','CREATE INDEX `IDX_dashboard_snapshot_user_id` ON `dashboard_snapshot` (`user_id`);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(80,'alter dashboard_snapshot to mediumtext v2','SELECT 0 WHERE 0;',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(81,'create quota table v1','CREATE TABLE IF NOT EXISTS `quota` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NULL
+, `user_id` INTEGER NULL
+, `target` TEXT NOT NULL
+, `limit` INTEGER NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(82,'create index UQE_quota_org_id_user_id_target - v1','CREATE UNIQUE INDEX `UQE_quota_org_id_user_id_target` ON `quota` (`org_id`,`user_id`,`target`);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(83,'create plugin_setting table','CREATE TABLE IF NOT EXISTS `plugin_setting` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NULL
+, `plugin_id` TEXT NOT NULL
+, `enabled` INTEGER NOT NULL
+, `pinned` INTEGER NOT NULL
+, `json_data` TEXT NULL
+, `secure_json_data` TEXT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(84,'create index UQE_plugin_setting_org_id_plugin_id - v1','CREATE UNIQUE INDEX `UQE_plugin_setting_org_id_plugin_id` ON `plugin_setting` (`org_id`,`plugin_id`);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(85,'Add column plugin_version to plugin_settings','alter table `plugin_setting` ADD COLUMN `plugin_version` TEXT NULL ',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(86,'create session table','CREATE TABLE IF NOT EXISTS `session` (
+`key` TEXT PRIMARY KEY NOT NULL
+, `data` BLOB NOT NULL
+, `expiry` INTEGER NOT NULL
+);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(87,'Drop old table playlist table','DROP TABLE IF EXISTS `playlist`',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(88,'Drop old table playlist_item table','DROP TABLE IF EXISTS `playlist_item`',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(89,'create playlist table v2','CREATE TABLE IF NOT EXISTS `playlist` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `name` TEXT NOT NULL
+, `interval` TEXT NOT NULL
+, `org_id` INTEGER NOT NULL
+);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(90,'create playlist item table v2','CREATE TABLE IF NOT EXISTS `playlist_item` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `playlist_id` INTEGER NOT NULL
+, `type` TEXT NOT NULL
+, `value` TEXT NOT NULL
+, `title` TEXT NOT NULL
+, `order` INTEGER NOT NULL
+);',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(91,'drop preferences table v2','DROP TABLE IF EXISTS `preferences`',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(92,'drop preferences table v3','DROP TABLE IF EXISTS `preferences`',1,'','2016-09-13 17:01:47');
+INSERT INTO "migration_log" VALUES(93,'create preferences table v3','CREATE TABLE IF NOT EXISTS `preferences` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `user_id` INTEGER NOT NULL
+, `version` INTEGER NOT NULL
+, `home_dashboard_id` INTEGER NOT NULL
+, `timezone` TEXT NOT NULL
+, `theme` TEXT NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+);',1,'','2016-09-13 17:01:47');
+CREATE TABLE `user` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `version` INTEGER NOT NULL
+, `login` TEXT NOT NULL
+, `email` TEXT NOT NULL
+, `name` TEXT NULL
+, `password` TEXT NULL
+, `salt` TEXT NULL
+, `rands` TEXT NULL
+, `company` TEXT NULL
+, `org_id` INTEGER NOT NULL
+, `is_admin` INTEGER NOT NULL
+, `email_verified` INTEGER NULL
+, `theme` TEXT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+);
+INSERT INTO "user" VALUES(1,0,'admin','admin@localhost','','06c61b68dd43f38df064d38b06e2f79897a75d9f6cf3f48c59d5f4814ea2e4e3b0d88ce602744f6a3de82c6cf6bc52cb90d5','VrgLmaDAnH','tm29ISfRWV','',1,1,0,'','2016-09-13 17:01:47','2016-09-13 17:01:47');
+CREATE TABLE `temp_user` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `version` INTEGER NOT NULL
+, `email` TEXT NOT NULL
+, `name` TEXT NULL
+, `role` TEXT NULL
+, `code` TEXT NOT NULL
+, `status` TEXT NOT NULL
+, `invited_by_user_id` INTEGER NULL
+, `email_sent` INTEGER NOT NULL
+, `email_sent_on` DATETIME NULL
+, `remote_addr` TEXT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+);
+CREATE TABLE `star` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `user_id` INTEGER NOT NULL
+, `dashboard_id` INTEGER NOT NULL
+);
+CREATE TABLE `org` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `version` INTEGER NOT NULL
+, `name` TEXT NOT NULL
+, `address1` TEXT NULL
+, `address2` TEXT NULL
+, `city` TEXT NULL
+, `state` TEXT NULL
+, `zip_code` TEXT NULL
+, `country` TEXT NULL
+, `billing_email` TEXT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+);
+INSERT INTO "org" VALUES(1,0,'Main Org.','','','','','','',NULL,'2016-09-13 17:01:47','2016-09-13 17:01:47');
+CREATE TABLE `org_user` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `user_id` INTEGER NOT NULL
+, `role` TEXT NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+);
+INSERT INTO "org_user" VALUES(1,1,1,'Admin','2016-09-13 17:01:47','2016-09-13 17:01:47');
+CREATE TABLE `dashboard_tag` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `dashboard_id` INTEGER NOT NULL
+, `term` TEXT NOT NULL
+);
+CREATE TABLE `dashboard` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `version` INTEGER NOT NULL
+, `slug` TEXT NOT NULL
+, `title` TEXT NOT NULL
+, `data` TEXT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+, `updated_by` INTEGER NULL, `created_by` INTEGER NULL, `gnet_id` INTEGER NULL, `plugin_id` TEXT NULL);
+INSERT INTO "dashboard" VALUES(1,2,'prometheus-dashboard','Prometheus dashboard',X'7B22616E6E6F746174696F6E73223A7B226C697374223A5B5D7D2C226564697461626C65223A747275652C22676E65744964223A6E756C6C2C2268696465436F6E74726F6C73223A66616C73652C226964223A312C226C696E6B73223A5B5D2C2272656672657368223A66616C73652C22726F7773223A5B7B22636F6C6C61707365223A66616C73652C226564697461626C65223A747275652C22686569676874223A223235307078222C2270616E656C73223A5B7B22616C696173436F6C6F7273223A7B7D2C2262617273223A66616C73652C2264617461736F75726365223A6E756C6C2C226564697461626C65223A747275652C226572726F72223A66616C73652C2266696C6C223A312C2267726964223A7B227468726573686F6C6431223A6E756C6C2C227468726573686F6C6431436F6C6F72223A2272676261283231362C203230302C2032372C20302E323729222C227468726573686F6C6432223A6E756C6C2C227468726573686F6C6432436F6C6F72223A2272676261283233342C203131322C203131322C20302E323229227D2C226964223A312C2269734E6577223A747275652C226C6567656E64223A7B22617667223A66616C73652C2263757272656E74223A66616C73652C226D6178223A66616C73652C226D696E223A66616C73652C2273686F77223A747275652C22746F74616C223A66616C73652C2276616C756573223A66616C73657D2C226C696E6573223A747275652C226C696E657769647468223A322C226C696E6B73223A5B5D2C226E756C6C506F696E744D6F6465223A22636F6E6E6563746564222C2270657263656E74616765223A66616C73652C22706F696E74726164697573223A352C22706F696E7473223A66616C73652C2272656E6465726572223A22666C6F74222C227365726965734F7665727269646573223A5B5D2C227370616E223A31322C22737461636B223A66616C73652C22737465707065644C696E65223A66616C73652C2274617267657473223A5B7B2265787072223A22676F5F6D656D73746174735F616C6C6F635F6279746573222C22696E74657276616C466163746F72223A322C226D6574726963223A22676F5F6D656D73746174735F616C6C6F635F6279746573222C227265664964223A2241222C2273746570223A327D5D2C2274696D6546726F6D223A6E756C6C2C2274696D655368696674223A6E756C6C2C227469746C65223A2250616E656C205469746C65222C22746F6F6C746970223A7B226D735265736F6C7574696F6E223A66616C73652C22736861726564223A747275652C22736F7274223A302C2276616C75655F74797065223A2263756D756C6174697665227D2C2274797065223A226772617068222C227861786973223A7B2273686F77223A747275657D2C227961786573223A5B7B22666F726D6174223A2273686F7274222C226C6162656C223A6E756C6C2C226C6F6742617365223A312C226D6178223A6E756C6C2C226D696E223A6E756C6C2C2273686F77223A747275657D2C7B22666F726D6174223A2273686F7274222C226C6162656C223A6E756C6C2C226C6F6742617365223A312C226D6178223A6E756C6C2C226D696E223A6E756C6C2C2273686F77223A747275657D5D7D5D2C227469746C65223A22526F77227D2C7B22636F6C6C61707365223A66616C73652C226564697461626C65223A747275652C22686569676874223A223235307078222C2270616E656C73223A5B7B22616C696173436F6C6F7273223A7B7D2C2262617273223A66616C73652C2264617461736F75726365223A6E756C6C2C226564697461626C65223A747275652C226572726F72223A66616C73652C2266696C6C223A312C2267726964223A7B227468726573686F6C6431223A6E756C6C2C227468726573686F6C6431436F6C6F72223A2272676261283231362C203230302C2032372C20302E323729222C227468726573686F6C6432223A6E756C6C2C227468726573686F6C6432436F6C6F72223A2272676261283233342C203131322C203131322C20302E323229227D2C226964223A322C2269734E6577223A747275652C226C6567656E64223A7B22616C69676E41735461626C65223A66616C73652C22617667223A66616C73652C2263757272656E74223A66616C73652C226D6178223A66616C73652C226D696E223A66616C73652C2273686F77223A747275652C22746F74616C223A66616C73652C2276616C756573223A66616C73657D2C226C696E6573223A747275652C226C696E657769647468223A322C226C696E6B73223A5B5D2C226E756C6C506F696E744D6F6465223A22636F6E6E6563746564222C2270657263656E74616765223A66616C73652C22706F696E74726164697573223A352C22706F696E7473223A66616C73652C2272656E6465726572223A22666C6F74222C227365726965734F7665727269646573223A5B5D2C227370616E223A31322C22737461636B223A66616C73652C22737465707065644C696E65223A66616C73652C2274617267657473223A5B7B2265787072223A2231202D206972617465286E6F64655F6370757B6A6F623D5C226E6F64655C222C6D6F64653D5C2269646C655C227D5B356D5D29222C2268696465223A66616C73652C22696E74657276616C466163746F72223A322C226C6567656E64466F726D6174223A22222C226D6574726963223A226E6F64655F637075222C227265664964223A2241222C2273746570223A327D5D2C2274696D6546726F6D223A6E756C6C2C2274696D655368696674223A6E756C6C2C227469746C65223A22435055206E6F6E2D69646C652025222C22746F6F6C746970223A7B226D735265736F6C7574696F6E223A66616C73652C22736861726564223A747275652C22736F7274223A302C2276616C75655F74797065223A2263756D756C6174697665227D2C2274797065223A226772617068222C227861786973223A7B2273686F77223A747275657D2C227961786573223A5B7B22666F726D6174223A2270657263656E74756E6974222C226C6162656C223A22222C226C6F6742617365223A312C226D6178223A312C226D696E223A302C2273686F77223A747275657D2C7B22666F726D6174223A2273686F7274222C226C6162656C223A6E756C6C2C226C6F6742617365223A312C226D6178223A6E756C6C2C226D696E223A6E756C6C2C2273686F77223A66616C73657D5D7D5D2C227469746C65223A224E657720726F77227D5D2C22736368656D6156657273696F6E223A31322C2273686172656443726F737368616972223A66616C73652C227374796C65223A226461726B222C2274616773223A5B5D2C2274656D706C6174696E67223A7B226C697374223A5B5D7D2C2274696D65223A7B2266726F6D223A226E6F772D356D222C22746F223A226E6F77227D2C2274696D657069636B6572223A7B22726566726573685F696E74657276616C73223A5B223573222C22313073222C22333073222C22316D222C22356D222C2231356D222C2233306D222C223168222C223268222C223164225D2C2274696D655F6F7074696F6E73223A5B22356D222C2231356D222C223168222C223668222C22313268222C22323468222C223264222C223764222C22333064225D7D2C2274696D657A6F6E65223A2262726F77736572222C227469746C65223A2250726F6D6574686575732064617368626F617264222C2276657273696F6E223A327D',1,'2016-09-13 17:20:36','2016-09-13 17:49:29',1,1,0,'');
+CREATE TABLE `data_source` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `version` INTEGER NOT NULL
+, `type` TEXT NOT NULL
+, `name` TEXT NOT NULL
+, `access` TEXT NOT NULL
+, `url` TEXT NOT NULL
+, `password` TEXT NULL
+, `user` TEXT NULL
+, `database` TEXT NULL
+, `basic_auth` INTEGER NOT NULL
+, `basic_auth_user` TEXT NULL
+, `basic_auth_password` TEXT NULL
+, `is_default` INTEGER NOT NULL
+, `json_data` TEXT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+, `with_credentials` INTEGER NOT NULL DEFAULT 0);
+INSERT INTO "data_source" VALUES(1,1,0,'prometheus','Prometheus','direct','http://localhost:9090','','','',0,'','',1,X'7B7D','2016-09-13 17:06:19','2016-09-13 17:06:21',0);
+CREATE TABLE `api_key` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `name` TEXT NOT NULL
+, `key` TEXT NOT NULL
+, `role` TEXT NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+);
+CREATE TABLE `dashboard_snapshot` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `name` TEXT NOT NULL
+, `key` TEXT NOT NULL
+, `delete_key` TEXT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `user_id` INTEGER NOT NULL
+, `external` INTEGER NOT NULL
+, `external_url` TEXT NOT NULL
+, `dashboard` TEXT NOT NULL
+, `expires` DATETIME NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+);
+CREATE TABLE `quota` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NULL
+, `user_id` INTEGER NULL
+, `target` TEXT NOT NULL
+, `limit` INTEGER NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+);
+CREATE TABLE `plugin_setting` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NULL
+, `plugin_id` TEXT NOT NULL
+, `enabled` INTEGER NOT NULL
+, `pinned` INTEGER NOT NULL
+, `json_data` TEXT NULL
+, `secure_json_data` TEXT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+, `plugin_version` TEXT NULL);
+CREATE TABLE `session` (
+`key` TEXT PRIMARY KEY NOT NULL
+, `data` BLOB NOT NULL
+, `expiry` INTEGER NOT NULL
+);
+CREATE TABLE `playlist` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `name` TEXT NOT NULL
+, `interval` TEXT NOT NULL
+, `org_id` INTEGER NOT NULL
+);
+CREATE TABLE `playlist_item` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `playlist_id` INTEGER NOT NULL
+, `type` TEXT NOT NULL
+, `value` TEXT NOT NULL
+, `title` TEXT NOT NULL
+, `order` INTEGER NOT NULL
+);
+CREATE TABLE `preferences` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `user_id` INTEGER NOT NULL
+, `version` INTEGER NOT NULL
+, `home_dashboard_id` INTEGER NOT NULL
+, `timezone` TEXT NOT NULL
+, `theme` TEXT NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+);
+DELETE FROM sqlite_sequence;
+INSERT INTO "sqlite_sequence" VALUES('migration_log',93);
+INSERT INTO "sqlite_sequence" VALUES('user',1);
+INSERT INTO "sqlite_sequence" VALUES('dashboard',1);
+INSERT INTO "sqlite_sequence" VALUES('data_source',1);
+INSERT INTO "sqlite_sequence" VALUES('api_key',0);
+INSERT INTO "sqlite_sequence" VALUES('org',1);
+INSERT INTO "sqlite_sequence" VALUES('org_user',1);
+CREATE UNIQUE INDEX `UQE_user_login` ON `user` (`login`);
+CREATE UNIQUE INDEX `UQE_user_email` ON `user` (`email`);
+CREATE INDEX `IDX_temp_user_email` ON `temp_user` (`email`);
+CREATE INDEX `IDX_temp_user_org_id` ON `temp_user` (`org_id`);
+CREATE INDEX `IDX_temp_user_code` ON `temp_user` (`code`);
+CREATE INDEX `IDX_temp_user_status` ON `temp_user` (`status`);
+CREATE UNIQUE INDEX `UQE_star_user_id_dashboard_id` ON `star` (`user_id`,`dashboard_id`);
+CREATE UNIQUE INDEX `UQE_org_name` ON `org` (`name`);
+CREATE INDEX `IDX_org_user_org_id` ON `org_user` (`org_id`);
+CREATE UNIQUE INDEX `UQE_org_user_org_id_user_id` ON `org_user` (`org_id`,`user_id`);
+CREATE INDEX `IDX_dashboard_org_id` ON `dashboard` (`org_id`);
+CREATE UNIQUE INDEX `UQE_dashboard_org_id_slug` ON `dashboard` (`org_id`,`slug`);
+CREATE INDEX `IDX_dashboard_gnet_id` ON `dashboard` (`gnet_id`);
+CREATE INDEX `IDX_dashboard_org_id_plugin_id` ON `dashboard` (`org_id`,`plugin_id`);
+CREATE INDEX `IDX_data_source_org_id` ON `data_source` (`org_id`);
+CREATE UNIQUE INDEX `UQE_data_source_org_id_name` ON `data_source` (`org_id`,`name`);
+CREATE INDEX `IDX_api_key_org_id` ON `api_key` (`org_id`);
+CREATE UNIQUE INDEX `UQE_api_key_key` ON `api_key` (`key`);
+CREATE UNIQUE INDEX `UQE_api_key_org_id_name` ON `api_key` (`org_id`,`name`);
+CREATE UNIQUE INDEX `UQE_dashboard_snapshot_key` ON `dashboard_snapshot` (`key`);
+CREATE UNIQUE INDEX `UQE_dashboard_snapshot_delete_key` ON `dashboard_snapshot` (`delete_key`);
+CREATE INDEX `IDX_dashboard_snapshot_user_id` ON `dashboard_snapshot` (`user_id`);
+CREATE UNIQUE INDEX `UQE_quota_org_id_user_id_target` ON `quota` (`org_id`,`user_id`,`target`);
+CREATE UNIQUE INDEX `UQE_plugin_setting_org_id_plugin_id` ON `plugin_setting` (`org_id`,`plugin_id`);
+COMMIT;
+{
+  "annotations": {
+    "list": []
+  }, 
+  "editable": true, 
+  "gnetId": null, 
+  "hideControls": false, 
+  "id": 1, 
+  "links": [], 
+  "refresh": false, 
+  "rows": [
+    {
+      "collapse": false, 
+      "editable": true, 
+      "height": "250px", 
+      "panels": [
+        {
+          "aliasColors": {}, 
+          "bars": false, 
+          "datasource": null, 
+          "editable": true, 
+          "error": false, 
+          "fill": 1, 
+          "grid": {
+            "threshold1": null, 
+            "threshold1Color": "rgba(216, 200, 27, 0.27)", 
+            "threshold2": null, 
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          }, 
+          "id": 1, 
+          "isNew": true, 
+          "legend": {
+            "avg": false, 
+            "current": false, 
+            "max": false, 
+            "min": false, 
+            "show": true, 
+            "total": false, 
+            "values": false
+          }, 
+          "lines": true, 
+          "linewidth": 2, 
+          "links": [], 
+          "nullPointMode": "connected", 
+          "percentage": false, 
+          "pointradius": 5, 
+          "points": false, 
+          "renderer": "flot", 
+          "seriesOverrides": [], 
+          "span": 12, 
+          "stack": false, 
+          "steppedLine": false, 
+          "targets": [
+            {
+              "expr": "go_memstats_alloc_bytes", 
+              "intervalFactor": 2, 
+              "metric": "go_memstats_alloc_bytes", 
+              "refId": "A", 
+              "step": 2
+            }
+          ], 
+          "timeFrom": null, 
+          "timeShift": null, 
+          "title": "Panel Title", 
+          "tooltip": {
+            "msResolution": false, 
+            "shared": true, 
+            "sort": 0, 
+            "value_type": "cumulative"
+          }, 
+          "type": "graph", 
+          "xaxis": {
+            "show": true
+          }, 
+          "yaxes": [
+            {
+              "format": "short", 
+              "label": null, 
+              "logBase": 1, 
+              "max": null, 
+              "min": null, 
+              "show": true
+            }, 
+            {
+              "format": "short", 
+              "label": null, 
+              "logBase": 1, 
+              "max": null, 
+              "min": null, 
+              "show": true
+            }
+          ]
+        }
+      ], 
+      "title": "Row"
+    }, 
+    {
+      "collapse": false, 
+      "editable": true, 
+      "height": "250px", 
+      "panels": [
+        {
+          "aliasColors": {}, 
+          "bars": false, 
+          "datasource": null, 
+          "editable": true, 
+          "error": false, 
+          "fill": 1, 
+          "grid": {
+            "threshold1": null, 
+            "threshold1Color": "rgba(216, 200, 27, 0.27)", 
+            "threshold2": null, 
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          }, 
+          "id": 2, 
+          "isNew": true, 
+          "legend": {
+            "alignAsTable": false, 
+            "avg": false, 
+            "current": false, 
+            "max": false, 
+            "min": false, 
+            "show": true, 
+            "total": false, 
+            "values": false
+          }, 
+          "lines": true, 
+          "linewidth": 2, 
+          "links": [], 
+          "nullPointMode": "connected", 
+          "percentage": false, 
+          "pointradius": 5, 
+          "points": false, 
+          "renderer": "flot", 
+          "seriesOverrides": [], 
+          "span": 12, 
+          "stack": false, 
+          "steppedLine": false, 
+          "targets": [
+            {
+              "expr": "1 - irate(node_cpu{job=\"node\",mode=\"idle\"}[5m])", 
+              "hide": false, 
+              "intervalFactor": 2, 
+              "legendFormat": "", 
+              "metric": "node_cpu", 
+              "refId": "A", 
+              "step": 2
+            }
+          ], 
+          "timeFrom": null, 
+          "timeShift": null, 
+          "title": "CPU non-idle %", 
+          "tooltip": {
+            "msResolution": false, 
+            "shared": true, 
+            "sort": 0, 
+            "value_type": "cumulative"
+          }, 
+          "type": "graph", 
+          "xaxis": {
+            "show": true
+          }, 
+          "yaxes": [
+            {
+              "format": "percentunit", 
+              "label": "", 
+              "logBase": 1, 
+              "max": 1, 
+              "min": 0, 
+              "show": true
+            }, 
+            {
+              "format": "short", 
+              "label": null, 
+              "logBase": 1, 
+              "max": null, 
+              "min": null, 
+              "show": false
+            }
+          ]
+        }
+      ], 
+      "title": "New row"
+    }
+  ], 
+  "schemaVersion": 12, 
+  "sharedCrosshair": false, 
+  "style": "dark", 
+  "tags": [], 
+  "templating": {
+    "list": []
+  }, 
+  "time": {
+    "from": "now-5m", 
+    "to": "now"
+  }, 
+  "timepicker": {
+    "refresh_intervals": [
+      "5s", 
+      "10s", 
+      "30s", 
+      "1m", 
+      "5m", 
+      "15m", 
+      "30m", 
+      "1h", 
+      "2h", 
+      "1d"
+    ], 
+    "time_options": [
+      "5m", 
+      "15m", 
+      "1h", 
+      "6h", 
+      "12h", 
+      "24h", 
+      "2d", 
+      "7d", 
+      "30d"
+    ]
+  }, 
+  "timezone": "browser", 
+  "title": "Prometheus dashboard", 
+  "version": 2
+}
