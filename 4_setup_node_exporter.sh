@@ -1,6 +1,6 @@
 #!/bin/bash -ex
 
-tugboat ssh -n prometheus <<EOF
+tugboat ssh -n monitoring <<EOF
 
 if [ ! -e node_exporter-0.12.0.linux-amd64 ]; then
   curl -L https://github.com/prometheus/node_exporter/releases/download/0.12.0/node_exporter-0.12.0.linux-amd64.tar.gz > node_exporter-0.12.0.linux-amd64.tar.gz

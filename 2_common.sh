@@ -1,7 +1,7 @@
 #!/bin/bash -ex
 
 # use port 22 for ssh since haven't changed to port 2222 yet
-tugboat ssh -p 22 -n prometheus <<EOF
+tugboat ssh -p 22 -n monitoring <<EOF
 
 set -ex
 

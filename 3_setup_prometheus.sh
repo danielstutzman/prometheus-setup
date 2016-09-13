@@ -1,6 +1,6 @@
 #!/bin/bash -ex
 
-tugboat ssh -n prometheus <<EOF
+tugboat ssh -n monitoring <<EOF
 
 if [ ! -e prometheus-1.1.2.linux-amd64 ]; then
   curl -L https://github.com/prometheus/prometheus/releases/download/v1.1.2/prometheus-1.1.2.linux-amd64.tar.gz > prometheus-1.1.2.linux-amd64.tar.gz
