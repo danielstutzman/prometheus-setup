@@ -33,7 +33,7 @@ tee /etc/init/prometheus.conf <<EOF2
 start on startup
 chdir /root/prometheus-1.1.2.linux-amd64
 script
-  ./prometheus -config.file /root/prometheus.yml
+  ./prometheus -config.file /root/prometheus.yml -storage.local.memory-chunks=10000
 end script
 EOF2
 
