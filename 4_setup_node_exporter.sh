@@ -14,6 +14,8 @@ script
 end script
 EOF2
 
+sudo ufw allow 9100
+
 sudo service node_exporter restart
 
 EOF

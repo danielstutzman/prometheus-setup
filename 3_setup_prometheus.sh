@@ -1,11 +1,17 @@
 #!/bin/bash -ex
 
 tugboat ssh -n monitoring <<EOF
+set -ex
 
 if [ ! -e prometheus-1.1.2.linux-amd64 ]; then
   curl -L https://github.com/prometheus/prometheus/releases/download/v1.1.2/prometheus-1.1.2.linux-amd64.tar.gz > prometheus-1.1.2.linux-amd64.tar.gz
   tar xvfz prometheus-1.1.2.linux-amd64.tar.gz
 fi
+
+grep -v ' (basicruby|monitoring).internal ' /etc/hosts > /etc/hosts.new
+echo '192.81.208.111 basicruby.internal' >> /etc/hosts.new
+echo '127.0.0.1 monitoring.internal' >> /etc/hosts.new
+mv /etc/hosts.new /etc/hosts
 
 tee prometheus.yml <<EOF2
 global:
@@ -26,7 +32,7 @@ scrape_configs:
     scrape_interval: 5s
 
     static_configs:
-      - targets: ['localhost:9090']
+      - targets: ['monitoring.internal:9100', 'basicruby.internal:9100']
 EOF2
 
 tee /etc/init/prometheus.conf <<EOF2
