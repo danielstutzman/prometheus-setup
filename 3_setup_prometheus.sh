@@ -33,13 +33,16 @@ scrape_configs:
 
     static_configs:
       - targets: ['monitoring.internal:9100', 'basicruby.internal:9100']
+
+rule_files:
+- '/root/alert.rules'
 EOF2
 
 tee /etc/init/prometheus.conf <<EOF2
 start on startup
 chdir /root/prometheus-1.1.2.linux-amd64
 script
-  ./prometheus -config.file /root/prometheus.yml -storage.local.memory-chunks=10000
+  ./prometheus -config.file /root/prometheus.yml -storage.local.memory-chunks=10000 -alertmanager.url http://localhost:9093
 end script
 EOF2
 
