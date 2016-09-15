@@ -46,6 +46,8 @@ script
 end script
 EOF2
 
-sudo service prometheus restart
+sudo service prometheus stop || true
+sleep 1
+sudo service prometheus start
 
 EOF
