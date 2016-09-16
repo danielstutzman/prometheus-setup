@@ -14,7 +14,7 @@ script
 end script
 EOF2
 
-sudo ufw allow 9100
+sudo ufw allow from \$(dig +short monitoring.danstutzman.com) to any port 9100
 
 sudo service node_exporter restart
 
