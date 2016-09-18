@@ -24,13 +24,13 @@ scrape_configs:
     refresh_interval: 1m
 - job_name: node_exporter
   static_configs:
-    - targets:
-      - monitoring.danstutzman.com:9100
-      - basicruby.danstutzman.com:9100
+  - targets:
+    - monitoring.danstutzman.com:9100
+    - basicruby.danstutzman.com:9100
 - job_name: prometheus-piwik-exporter
   static_configs:
-    - targets:
-      - localhost:9101
+  - targets:
+    - localhost:9101
 rule_files:
 - '/root/alert.rules'
 EOF2
