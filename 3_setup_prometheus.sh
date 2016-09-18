@@ -31,6 +31,11 @@ scrape_configs:
   static_configs:
   - targets:
     - localhost:9101
+- job_name: prometheus-cloudfront-logs-exporter
+  static_configs:
+  - targets:
+    - localhost:9102
+  scrape_interval: 15m
 rule_files:
 - '/root/alert.rules'
 EOF2
