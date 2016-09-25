@@ -21,6 +21,13 @@ ALERT DiskWillFillIn24Hours
   LABELS {
     severity="page"
   }
+
+ALERT CloudFrontLogsStopped
+  IF absent(cloudfront_visits)
+  FOR 30m
+  LABELS {
+    severity="page"
+  }
 EOF2
 
 tee /etc/init/alertmanager.conf <<EOF2

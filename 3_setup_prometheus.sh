@@ -36,6 +36,10 @@ scrape_configs:
   - targets:
     - localhost:9102
   scrape_interval: 15m
+- job_name: postgres_exporter
+  static_configs:
+  - targets:
+    - vocabincontext.danstutzman.com:9113
 rule_files:
 - '/root/alert.rules'
 EOF2
