@@ -28,6 +28,10 @@ ALERT CloudFrontLogsStopped
   LABELS {
     severity="page"
   }
+
+ALERT SSLCertExpiringIn30Days
+  IF probe_ssl_earliest_cert_expiry - time() < 86400 * 30
+  FOR 10m
 EOF2
 
 tee /etc/init/alertmanager.conf <<EOF2

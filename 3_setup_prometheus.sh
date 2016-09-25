@@ -1,6 +1,6 @@
 #!/bin/bash -ex
 
-tugboat ssh -n monitoring <<EOF
+tugboat ssh -n monitoring <<"EOF"
 set -ex
 
 if [ ! -e prometheus-1.1.2.linux-amd64 ]; then
@@ -13,7 +13,7 @@ mkdir -p /root/prometheus_configs
 echo "- targets: [ 'vocabincontext.danstutzman.com:9100' ]" \
   >/root/prometheus_configs/vocabincontext.yml
 
-tee prometheus.yml <<EOF2
+tee prometheus.yml <<"EOF2"
 global:
   scrape_interval: 15s
 scrape_configs:
@@ -40,6 +40,29 @@ scrape_configs:
   static_configs:
   - targets:
     - vocabincontext.danstutzman.com:9113
+- job_name: blackbox_exporter
+  metrics_path: /probe
+  params:
+    module: [http_2xx]
+  static_configs:
+  - targets:
+    - basicruby.com
+    - danstutzman.com
+    - monitoring.danstutzman.com
+    - vocabincontext.com
+  relabel_configs:
+  - source_labels: [__address__]
+    regex: (.*?)(:80)?
+    target_label: __param_target
+    replacement: https://${1}
+  - source_labels: [__param_target]
+    regex: (.*)
+    target_label: instance
+    replacement: ${1}
+  - source_labels: []
+    regex: .*
+    target_label: __address__
+    replacement: 127.0.0.1:9115
 rule_files:
 - '/root/alert.rules'
 EOF2
