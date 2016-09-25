@@ -14,26 +14,6 @@ if [ ! -e alertmanager-0.4.2.linux-amd64 ]; then
   tar xvzf alertmanager-0.4.2.linux-amd64.tar.gz
 fi
 
-tee /root/alert.rules <<EOF2
-ALERT DiskWillFillIn24Hours
-  IF predict_linear(node_filesystem_free{job='node'}[1h], 24*3600) < 0
-  FOR 1m
-  LABELS {
-    severity="page"
-  }
-
-ALERT CloudFrontLogsStopped
-  IF absent(cloudfront_visits)
-  FOR 30m
-  LABELS {
-    severity="page"
-  }
-
-ALERT SSLCertExpiringIn30Days
-  IF probe_ssl_earliest_cert_expiry - time() < 86400 * 30
-  FOR 10m
-EOF2
-
 tee /etc/init/alertmanager.conf <<EOF2
 start on startup
 script
