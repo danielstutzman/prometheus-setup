@@ -27,14 +27,12 @@ scrape_configs:
   - targets:
     - monitoring.danstutzman.com:9100
     - basicruby.danstutzman.com:9100
-- job_name: prometheus-piwik-exporter
+- job_name: prometheus-custom-metrics
   static_configs:
   - targets:
-    - localhost:9101
-- job_name: prometheus-cloudfront-logs-exporter
-  static_configs:
-  - targets:
-    - localhost:9102
+    - vocabincontext.danstutzman.com:9102
+    - monitoring.danstutzman.com:9102
+    - basicruby.danstutzman.com:9102
   scrape_interval: 15m
 - job_name: postgres_exporter
   static_configs:
