@@ -4,7 +4,7 @@ DOMAINS_AND_TLS=~/dev/domains_and_tls
 $DOMAINS_AND_TLS/renew_certificate.sh monitoring.danstutzman.com
 
 INSTANCE_IP=`tugboat droplets | grep 'monitoring ' | egrep -oh "[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+" || true`
-scp -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -P 2222 \
+scp -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null \
   $DOMAINS_AND_TLS/tls/certs/monitoring.danstutzman.com/cert.pem \
   $DOMAINS_AND_TLS/tls/certs/monitoring.danstutzman.com/privkey.pem \
   root@$INSTANCE_IP:/etc/grafana
