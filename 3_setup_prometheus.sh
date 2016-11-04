@@ -94,7 +94,7 @@ ALERT UbuntuNeedsReboot
 EOF2
 
 tee /etc/init/prometheus.conf <<EOF2
-start on startup
+start on filesystem
 chdir /root/prometheus-1.1.2.linux-amd64
 script
   ./prometheus -config.file /root/prometheus.yml -storage.local.memory-chunks=10000 -alertmanager.url http://localhost:9093
