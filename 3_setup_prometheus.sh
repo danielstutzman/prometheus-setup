@@ -83,6 +83,14 @@ ALERT CloudFrontLogsStopped
 ALERT SSLCertExpiringIn30Days
   IF probe_ssl_earliest_cert_expiry - time() < 86400 * 30
   FOR 10m
+
+ALERT UnappliedUbuntuSecurityUpdates
+  IF ubuntu_security_updates > 0
+  FOR 24h
+
+ALERT UbuntuNeedsReboot
+  IF is_reboot_required > 0
+  FOR 1m
 EOF2
 
 tee /etc/init/prometheus.conf <<EOF2
