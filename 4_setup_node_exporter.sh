@@ -1,5 +1,6 @@
 #!/bin/bash -ex
 
+fwknop -s -n monitoring.danstutzman.com
 tugboat ssh -n monitoring <<EOF
 
 if [ ! -e node_exporter-0.12.0.linux-amd64 ]; then

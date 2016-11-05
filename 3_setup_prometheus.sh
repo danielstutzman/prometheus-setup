@@ -1,5 +1,6 @@
 #!/bin/bash -ex
 
+fwknop -s -n monitoring.danstutzman.com
 tugboat ssh -n monitoring <<"EOF"
 set -ex
 
