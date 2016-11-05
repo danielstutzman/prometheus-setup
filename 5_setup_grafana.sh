@@ -37,4 +37,4 @@ sudo ufw allow 3000
 
 EOF
 
-echo "Please login with admin/admin and set the admin's password"
+echo "Please login to Grafana at https://monitoring.danstutzman.com:3000 with admin/admin and set the admin's password"
