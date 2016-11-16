@@ -92,6 +92,11 @@ ALERT UbuntuNeedsReboot
 ALERT FakeAlertToVerifyEndToEnd
   IF vector(time() > bool 0)
   FOR 1m
+
+ALERT TooHighCPU
+  IF irate(node_cpu{mode="idle"}[5m]) < 0.8
+  FOR 15m
+
 EOF2
 
 sudo tee /etc/init/prometheus.conf <<EOF2
