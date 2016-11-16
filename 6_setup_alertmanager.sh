@@ -22,7 +22,7 @@ if [ ! -e alertmanager-0.5.0.linux-amd64 ]; then
 fi
 
 tee /etc/init/alertmanager.conf <<EOF2
-start on startup
+start on filesystem
 setuid alertmanager
 setgid alertmanager
 script
