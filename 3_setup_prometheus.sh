@@ -88,6 +88,10 @@ ALERT UnappliedUbuntuSecurityUpdates
 ALERT UbuntuNeedsReboot
   IF is_reboot_required > 0
   FOR 1m
+
+ALERT FakeAlertToVerifyEndToEnd
+  IF vector(time() > bool 0)
+  FOR 1m
 EOF2
 
 sudo tee /etc/init/prometheus.conf <<EOF2

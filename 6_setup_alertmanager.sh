@@ -59,6 +59,12 @@ route:
   # A default receiver
   receiver: email-dan
 
+  routes:
+  - receiver: fake-alert-emails
+    repeat_interval: 1h
+    match:
+      alertname: 'FakeAlertToVerifyEndToEnd'
+
 # Inhibition rules allow to mute a set of alerts given that another alert is
 # firing.
 # We use this to mute any warning-level notifications if the same alert is
@@ -75,6 +81,10 @@ receivers:
 - name: 'email-dan'
   email_configs:
   - to: 'dtstutz@gmail.com'
+    require_tls: false
+- name: 'fake-alert-emails'
+  email_configs:
+  - to: 'fake.alert.emails@gmail.com'
     require_tls: false
 EOF2
 
