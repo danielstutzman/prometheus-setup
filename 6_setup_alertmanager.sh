@@ -1,7 +1,7 @@
 #!/bin/bash -ex
 
 fwknop -s -n monitoring.danstutzman.com
-tugboat ssh -n monitoring <<EOF
+ssh root@monitoring.danstutzman.com <<EOF
 
 sudo debconf-set-selections <<< "postfix postfix/mailname string monitoring.danstutzman.com"
 sudo debconf-set-selections <<< "postfix postfix/main_mailer_type string 'Internet Site'"
@@ -10,19 +10,27 @@ sudo postconf -e 'myhostname = monitoring.danstutzman.com'
 echo monitoring.danstutzman.com | sudo tee /etc/hostname
 sudo hostname monitoring.danstutzman.com
 
-if [ ! -e alertmanager-0.4.2.linux-amd64 ]; then
-  curl -L https://github.com/prometheus/alertmanager/releases/download/v0.4.2/alertmanager-0.4.2.linux-amd64.tar.gz > alertmanager-0.4.2.linux-amd64.tar.gz
-  tar xvzf alertmanager-0.4.2.linux-amd64.tar.gz
+id -u alertmanager &>/dev/null || sudo useradd alertmanager
+sudo mkdir -p /home/alertmanager
+sudo chown alertmanager:alertmanager /home/alertmanager
+cd /home/alertmanager
+
+if [ ! -e alertmanager-0.5.0.linux-amd64 ]; then
+  curl -L https://github.com/prometheus/alertmanager/releases/download/v0.5.0/alertmanager-0.5.0.linux-amd64.tar.gz > alertmanager-0.5.0.linux-amd64.tar.gz
+  chown alertmanager:alertmanager alertmanager-0.5.0.linux-amd64.tar.gz
+  sudo -u alertmanager tar xvzf alertmanager-0.5.0.linux-amd64.tar.gz
 fi
 
 tee /etc/init/alertmanager.conf <<EOF2
 start on startup
+setuid alertmanager
+setgid alertmanager
 script
-  /root/alertmanager-0.4.2.linux-amd64/alertmanager -config.file /root/alertmanager.yml -storage.path /root/alertmanager-data
+  /home/alertmanager/alertmanager-0.5.0.linux-amd64/alertmanager -config.file /home/alertmanager/alertmanager.yml -storage.path /home/alertmanager/alertmanager-data
 end script
 EOF2
 
-tee /root/alertmanager.yml <<EOF2
+sudo -u alertmanager tee /home/alertmanager/alertmanager.yml <<EOF2
 global:
   smtp_smarthost: 'localhost:25'
   smtp_from: 'alertmanager@monitoring.danstutzman.com'

@@ -4,17 +4,18 @@ fwknop -s -n monitoring.danstutzman.com
 ssh root@monitoring.danstutzman.com <<"EOF"
 set -ex
 
-if [ ! -e prometheus-1.1.2.linux-amd64 ]; then
-  curl -L https://github.com/prometheus/prometheus/releases/download/v1.1.2/prometheus-1.1.2.linux-amd64.tar.gz > prometheus-1.1.2.linux-amd64.tar.gz
-  tar xvfz prometheus-1.1.2.linux-amd64.tar.gz
+id -u prometheus &>/dev/null || sudo useradd prometheus
+sudo mkdir -p /home/prometheus
+sudo chown prometheus:prometheus /home/prometheus
+cd /home/prometheus
+
+if [ ! -e prometheus-1.3.1.linux-amd64 ]; then
+  curl -L https://github.com/prometheus/prometheus/releases/download/v1.3.1/prometheus-1.3.1.linux-amd64.tar.gz > prometheus-1.3.1.linux-amd64.tar.gz
+  chown prometheus:prometheus prometheus-1.3.1.linux-amd64.tar.gz
+  sudo -u prometheus tar xvfz prometheus-1.3.1.linux-amd64.tar.gz
 fi
 
-mkdir -p /root/prometheus_configs
-
-echo "- targets: [ 'vocabincontext.danstutzman.com:9100' ]" \
-  >/root/prometheus_configs/vocabincontext.yml
-
-tee prometheus.yml <<"EOF2"
+sudo -u prometheus tee /home/prometheus/prometheus.yml <<"EOF2"
 global:
   scrape_interval: 15s
 scrape_configs:
@@ -63,10 +64,10 @@ scrape_configs:
     target_label: __address__
     replacement: 127.0.0.1:9115
 rule_files:
-- '/root/alert.rules'
+- /home/prometheus/alert.rules
 EOF2
 
-tee /root/alert.rules <<EOF2
+sudo -u prometheus tee /home/prometheus/alert.rules <<EOF2
 ALERT DiskWillFillIn24Hours
   IF predict_linear(node_filesystem_free{job='node'}[1h], 24*3600) < 0
   FOR 1m
@@ -94,11 +95,13 @@ ALERT UbuntuNeedsReboot
   FOR 1m
 EOF2
 
-tee /etc/init/prometheus.conf <<EOF2
+sudo tee /etc/init/prometheus.conf <<EOF2
 start on filesystem
-chdir /root/prometheus-1.1.2.linux-amd64
+setuid prometheus
+setgid prometheus
+chdir /home/prometheus/prometheus-1.3.1.linux-amd64
 script
-  ./prometheus -config.file /root/prometheus.yml -storage.local.memory-chunks=10000 -alertmanager.url http://localhost:9093
+  ./prometheus -config.file /home/prometheus/prometheus.yml -alertmanager.url http://localhost:9093
 end script
 EOF2
 
