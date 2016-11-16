@@ -1,7 +1,7 @@
 #!/bin/bash -ex
 
 fwknop -s -n monitoring.danstutzman.com
-tugboat ssh -n monitoring <<"EOF"
+ssh root@monitoring.danstutzman.com <<"EOF"
 set -ex
 
 if [ ! -e prometheus-1.1.2.linux-amd64 ]; then
