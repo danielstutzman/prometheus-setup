@@ -19,11 +19,6 @@ sudo -u prometheus tee /home/prometheus/prometheus.yml <<"EOF2"
 global:
   scrape_interval: 15s
 scrape_configs:
-- job_name: file_sd_configs
-  file_sd_configs:
-  - files:
-    - /root/prometheus_configs/*.yml
-    refresh_interval: 1m
 - job_name: node_exporter
   static_configs:
   - targets:
