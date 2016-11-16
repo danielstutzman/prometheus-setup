@@ -24,6 +24,7 @@ scrape_configs:
   - targets:
     - monitoring.danstutzman.com:9100
     - basicruby.danstutzman.com:9100
+    - vocabincontext.danstutzman.com:9100
 - job_name: prometheus-custom-metrics
   static_configs:
   - targets:
