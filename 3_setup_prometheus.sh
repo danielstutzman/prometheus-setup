@@ -25,12 +25,16 @@ scrape_configs:
     - monitoring.danstutzman.com:9100
     - basicruby.danstutzman.com:9100
     - vocabincontext.danstutzman.com:9100
-- job_name: prometheus-custom-metrics
+- job_name: prometheus-custom-metrics-fast
   static_configs:
   - targets:
     - vocabincontext.danstutzman.com:9102
     - monitoring.danstutzman.com:9102
     - basicruby.danstutzman.com:9102
+- job_name: prometheus-custom-metrics-slow
+  static_configs:
+  - targets:
+    - monitoring.danstutzman.com:9103
   scrape_interval: 15m
 - job_name: postgres_exporter
   static_configs:
