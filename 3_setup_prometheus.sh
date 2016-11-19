@@ -113,7 +113,8 @@ setuid prometheus
 setgid prometheus
 chdir /home/prometheus/prometheus-1.3.1.linux-amd64
 script
-  ./prometheus -config.file /home/prometheus/prometheus.yml -alertmanager.url http://localhost:9093
+  ./prometheus -config.file /home/prometheus/prometheus.yml -alertmanager.url http://localhost:9093 -storage.local.memory-chunks=50000
+  # memory-chunks of 50000 * 2.5K per chunk = expected 125MB memory use
 end script
 EOF2
 
