@@ -108,7 +108,7 @@ ALERT TooHighCPU
 EOF2
 
 sudo tee /etc/init/prometheus.conf <<EOF2
-start on filesystem
+start on started remote_syslog
 setuid prometheus
 setgid prometheus
 chdir /home/prometheus/prometheus-1.3.1.linux-amd64

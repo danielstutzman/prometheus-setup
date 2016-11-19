@@ -20,7 +20,7 @@ for INSTANCE in basicruby monitoring vocabincontext; do
   fi
 
   tee /etc/init/node_exporter.conf <<EOF2
-  start on filesystem
+  start on started remote_syslog
   setuid node_exporter
   setgid node_exporter
   script
