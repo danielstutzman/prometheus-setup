@@ -52,7 +52,6 @@ scrape_configs:
   - targets:
     - basicruby.com
     - danstutzman.com
-    - monitoring.danstutzman.com
     - vocabincontext.com
   relabel_configs:
   - source_labels: [__address__]
