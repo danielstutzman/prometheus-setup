@@ -1,7 +1,6 @@
 #!/bin/bash -ex
 
-#for INSTANCE in basicruby monitoring vocabincontext; do
-for INSTANCE in monitoring; do
+for INSTANCE in basicruby monitoring vocabincontext; do
   fwknop -s -n $INSTANCE.danstutzman.com
   ssh root@$INSTANCE.danstutzman.com <<"EOF"
   set -ex
