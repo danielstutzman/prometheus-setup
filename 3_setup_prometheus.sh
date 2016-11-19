@@ -19,6 +19,10 @@ sudo -u prometheus tee /home/prometheus/prometheus.yml <<"EOF2"
 global:
   scrape_interval: 15s
 scrape_configs:
+- job_name: prometheus-monitor-itself
+  static_configs:
+  - targets:
+    - localhost:9090
 - job_name: node_exporter
   static_configs:
   - targets:
