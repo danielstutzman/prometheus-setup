@@ -96,7 +96,7 @@ ALERT UnappliedUbuntuSecurityUpdates
 
 ALERT UbuntuNeedsReboot
   IF is_reboot_required > 0
-  FOR 1m
+  FOR 15m
 
 ALERT FakeAlertToVerifyEndToEnd
   IF vector(time() > bool 0)
