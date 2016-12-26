@@ -53,6 +53,7 @@ scrape_configs:
     - basicruby.com
     - danstutzman.com
     - vocabincontext.com
+    - monitoring.danstutzman.com:3000
   relabel_configs:
   - source_labels: [__address__]
     regex: (.*?)(:80)?
@@ -104,6 +105,16 @@ ALERT FakeAlertToVerifyEndToEnd
 ALERT TooHighCPU
   IF irate(node_cpu{mode="idle"}[5m]) < 0.8
   FOR 15m
+
+ALERT MissingMetrics
+  IF absent(probe_ssl_earliest_cert_expiry{instance="https://danstutzman.com"}) OR
+  absent(probe_ssl_earliest_cert_expiry{instance="https://basicruby.com"}) OR
+  absent(probe_ssl_earliest_cert_expiry{instance="https://vocabincontext.com"}) OR
+  absent(probe_ssl_earliest_cert_expiry{instance="https://monitoring.danstutzman.com:3000"}) OR
+  absent(is_reboot_required{instance="basicruby.danstutzman.com:9103"}) OR
+  absent(is_reboot_required{instance="monitoring.danstutzman.com:9103"}) OR
+  absent(is_reboot_required{instance="vocabincontext.danstutzman.com:9103"})
+  FOR 10m
 
 EOF2
 
