@@ -1,8 +1,8 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 
 fwknop -s -n monitoring.danstutzman.com
 ssh root@monitoring.danstutzman.com <<"EOF"
-set -ex
+set -e
 
 id -u prometheus &>/dev/null || sudo useradd prometheus
 sudo mkdir -p /home/prometheus
@@ -134,5 +134,7 @@ EOF2
 sudo service prometheus stop || true
 sleep 1
 sudo service prometheus start
+sleep 1
+curl -f -s -o /dev/null http://localhost:9090/graph || { echo 1>&2 "------ Couldn't curl http://localhost:9090/graph; tail of log follows..."; tail /var/log/upstart/prometheus.log; exit 1; }
 
 EOF
